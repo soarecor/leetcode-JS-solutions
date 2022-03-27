@@ -1,4 +1,4 @@
-// Median of two sorted Arrays
+// https://leetcode.com/problems/median-of-two-sorted-arrays/
 
 var findMedianSortedArrays = function(nums1, nums2) {  
     let joinedArr = nums1.concat(nums2).sort((a,b) => a - b)

@@ -1,7 +1,9 @@
-/**
- * @param {string[]} strs
- * @return {string}
- */
+
+
+//https://leetcode.com/problems/longest-common-prefix/
+
+// this solution is partially correct. More work to be done. This works for the current example - ["flower","flow","flight"]
+
 var longestCommonPrefix = function (strs) {
     let splitStrings = [];
     let maxLength = 0;
@@ -38,7 +40,7 @@ var longestCommonPrefix = function (strs) {
     }
   
     return equalLetters.join('') || ''
-  };
+};
 
 
-  console.log(longestCommonPrefix(["flower","flow","flight"])
+console.log(longestCommonPrefix(["flower","flow","flight"]))

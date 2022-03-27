@@ -117,20 +117,21 @@ function findDuplicateTransactions (transactions = []) {
     let duplicateTransactions = []
    
     const categoryIds = []
-    //construct categoryIds array of objects
+    // construct categoryIds array of objects
+    // each object will have category ids that share the same category, amount, sourceAccount and targetAccount
     transactions.forEach((trans) => {
       const index = categoryIds.findIndex((element) => { return element.category === trans.category && element.amount === trans.amount && element.sourceAccount === trans.sourceAccount && element.targetAccount === trans.targetAccount })
       if(index > -1 ) {
         categoryIds[index].ids.push(trans.id)
       } else {
-        const arrLength = categoryIds.length
          categoryIds[categoryIds.length] = { ids: [trans.id], category: trans.category, amount: trans.amount, sourceAccount: trans.sourceAccount, targetAccount: trans.targetAccount}
       }
     })
    
-    categoryIds.forEach((trans) => {
+    categoryIds.forEach((category) => {
        let subArr = []
-       trans.ids.forEach((id) => {
+       // subArr is the array "group" of duplicate transactions. Had a hard time naming this.
+       category.ids.forEach((id) => {
         let trans = transactions.find((transaction) => transaction.id === id)
         subArr.push(trans)
        })
@@ -141,16 +142,18 @@ function findDuplicateTransactions (transactions = []) {
         else return 0
       })
      
-      //compare the time to the previous time and next time in subArr, if time difference is > 1 minute remove object
+      //compare current time to the previous time and next time in subArr, if time difference is > 1 minute remove object
       for(let i=0; i<subArr.length; i++){
-        // check current index if prev comparison is < 60 AND next comparison is < 60
-        let dateA = subArr[i-1] ? Date.parse(subArr[i-1].time) : 0
-        let dateB = Date.parse(subArr[i].time)
-        let dateC = subArr[i+1] ? Date.parse(subArr[i+1].time) : 0
+        // check current index if prev comparison is < 60 AND next comparison is < 60.
+        // If at the start means no previous value and at the end means no next value. This is being accounted for.
+
+        let prev = subArr[i-1] ? Date.parse(subArr[i-1].time) : 0
+        let curr = Date.parse(subArr[i].time)
+        let next = subArr[i+1] ? Date.parse(subArr[i+1].time) : 0
        
-        let isMoreThanMinute = (dateB - dateA) > 60000  && (dateC - dateB) > 60000
-        if(!subArr[i-1]) isMoreThanMinute = (dateC - dateB) > 60000
-        if (!subArr[i+1]) isMoreThanMinute = (dateB - dateA) > 60000
+        let isMoreThanMinute = (curr - prev) > 60000  && (next - curr) > 60000
+        if(!subArr[i-1]) isMoreThanMinute = (next - curr) > 60000
+        if (!subArr[i+1]) isMoreThanMinute = (curr - prev) > 60000
   
         if(isMoreThanMinute) {
           subArr.splice(i, 1)
@@ -170,57 +173,6 @@ function findDuplicateTransactions (transactions = []) {
     return duplicateTransactions
   }
 
-
-  const transactionss = [
-    {
-      id: 2,
-      sourceAccount: 'my_account',
-      targetAccount: 'coffee_shop',
-      amount: -50,
-      category: 'eating_out',
-      time: '2018-03-01T12:34:00.000Z'
-    },
-    {
-      id: 5,
-      sourceAccount: 'my_account',
-      targetAccount: 'coffee_shop',
-      amount: -50,
-      category: 'eating_out',
-      time: '2018-03-02T09:25:20.000Z'
-    },
-    {
-      id: 9,
-      sourceAccount: 'my_account',
-      targetAccount: 'coffee_shop',
-      amount: -50,
-      category: 'eating_out',
-      time: '2018-03-04T07:14:20.000Z'
-    },
-    {
-      id: 13,
-      sourceAccount: 'my_account',
-      targetAccount: 'coffee_shop',
-      amount: -50,
-      category: 'eating_out',
-      time: '2018-04-01T10:24:00.000Z'
-    },
-    {
-      id: 14,
-      sourceAccount: 'my_account',
-      targetAccount: 'coffee_shop',
-      amount: -50,
-      category: 'eating_out',
-      time: '2018-04-01T10:24:40.000Z'
-    },
-    {
-      id: 15,
-      sourceAccount: 'my_account',
-      targetAccount: 'coffee_shop',
-      amount: -50,
-      category: 'eating_out',
-      time: '2018-04-01T10:25:10.000Z'
-    }
-  ]
   const transactions = [
     {
       id: 24,

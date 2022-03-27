@@ -1,4 +1,4 @@
-# leetcode-JS-solutions
+#Leetcode/random JS problems
 
 Javascript solutions to hard Leetcode problems and other random problems.  
 
